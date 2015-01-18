@@ -1,0 +1,33 @@
+\feladatszam Az alábbi függvény minimumát szeretnénk meghatározni konjugált gradiens módszerrel:
+\begin{align*}
+f(x_1,x_2)=x_1^2+x_2^2+x_1-2x_2+7
+\end{align*}
+
+Tegyük fel, hogy már néhány lépést elvégeztünk, és alábbi eredményeket kaptuk:
+\begin{align*}
+x_6=\left(\begin{array}{c}0\\1+\frac{\sqrt{2}}{3}\end{array}\right) \quad 
+d_6=\left(\begin{array}{c}\frac{1}{2}\\\frac{1}{2}\end{array}\right) \quad
+x_7=\left(\begin{array}{c}\frac{1}{2}\\4\end{array}\right)
+\end{align*}
+
+Határozza meg az $x_8$ közelítést, és a hozzá tartozó $d_7$ vektort!
+
+\begin{megoldas}
+Az irányvektort meghatározhatjuk a megadott adatokból, csak a gradiens értékére van szükségünk hozzá:
+$$d_7=-\nabla f(x_7)+\frac{||\nabla f(x_{7})||_2^2}{||\nabla f(x_6)||_2^2}d_6$$
+$$\nabla f(x_1,x_2)=\left(\begin{array}{c}2x_1+1\\2x_2-2\end{array}\right)$$
+
+A behelyettesítés után:
+\begin{align*}d_7=-\left(\begin{array}{c}2\\[0.3em]6\end{array}\right)+\frac{2^2+6^2}{2^2+(-1)^2}\left(\begin{array}{c}\frac{1}{2}\\[0.3em]\frac{1}{2}\end{array}\right)= \left(\begin{array}{c}-2\\[0.3em]-6\end{array}\right)+10\left(\begin{array}{c}\frac{1}{2}\\[0.3em]\frac{1}{2}\end{array}\right)=\left(\begin{array}{c}3\\[0.3em]-1\end{array}\right)\end{align*}
+
+Ezt felhasználva, most már meg tudjuk mondani $x_8$ értékét:
+\begin{align*}x_8=x_7+\lambda d_7=\left(\begin{array}{c}\frac{1}{2}+3\lambda\\[0.3em]4-\lambda\end{array}\right)\end{align*}
+
+A $\lambda$ értékének meghatározásához behelyettesítünk:
+\begin{align*}
+\varphi(\lambda)&=(\tfrac{1}{2}+3\lambda)^2+(4-\lambda)^2+(\tfrac{1}{2}+3\lambda)-2(4-\lambda)+7\\
+\varphi'(\lambda)&=18\lambda+3+2\lambda-8+3+2=20\lambda = 0 \longrightarrow \lambda=0
+\end{align*}
+
+Tehát $x_8$ megegyezik $x_7$-tel, így az algoritmus meg is állna.
+\end{megoldas}

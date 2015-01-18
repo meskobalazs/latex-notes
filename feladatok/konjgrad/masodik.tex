@@ -1,0 +1,25 @@
+\feladatszam Oldja meg az alábbi optimalizálási feladatot konjugált gradiens módszerrel, ha az első öt lépés utáni eredmények az alábbiak: 
+\begin{gather*}
+x_5 = \left(\begin{array}{c}0\\0\end{array}\right) \quad 
+x_6 = \left(\begin{array}{c}1\\-1\end{array}\right) \quad
+d_5 = \left(\begin{array}{c}1\\-1\end{array}\right)\\
+f(x_1,x_2)=x_1^2+3x_1x_2+2x_2^2-x_1+x_2+3\rightarrow\min!
+\end{gather*}
+
+
+\begin{megoldas}
+\begin{gather*}
+\nabla f(x_1,x_2)=\left(\begin{array}{c}2x_1+3x_2-1\\2x_2+3x_1+1\end{array}\right)\\
+d_6=-\nabla f(x_6)+\frac{||\nabla f(x_{6})||_2^2}{||\nabla f(x_5)||_2^2}d_5=-\left(\begin{array}{c}-2\\2\end{array}\right)+\frac{(-2)^2+2^2}{(-1)^2+1^2}\left(\begin{array}{c}1\\-1\end{array}\right)=\left(\begin{array}{c}6\\-6\end{array}\right)\\
+x_7=x_6+\lambda d_6=\left(\begin{array}{c}1\\-1\end{array}\right)+\lambda\left(\begin{array}{c}6\\-6\end{array}\right)=\left(\begin{array}{c}1+6\lambda\\-1-6\lambda\end{array}\right)
+\end{gather*}
+
+A $\lambda$ behelyettesítése után:
+\begin{alignat*}{1}
+\varphi(\lambda)&=(1+6\lambda)^2-3(1+6\lambda)^2+2(1+6\lambda^2)-(1+6\lambda)-(1+6\lambda)+3\\
+&=-2(1+6\lambda)+3=-12\lambda+1\\
+\varphi'(\lambda)&=-12\neq0
+\end{alignat*}
+
+A $\lambda$ értéke nem határozható meg, ezért az algoritmus megáll.
+\end{megoldas}

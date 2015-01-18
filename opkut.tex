@@ -1,0 +1,1382 @@
+\documentclass[a4paper,12pt,svgnames]{report}
+\usepackage{preamble}
+
+\chead{}
+\rhead{Operációkutatás}
+\lhead{Meskó Balázs}
+\cfoot{}
+\rfoot{\thepage. oldal}
+\lfoot{}
+
+\pagestyle{fancy}
+
+\begin{document}
+
+\thispagestyle{empty}
+\centerline{\huge \textsc{O}\textsc{perációkutatás}}
+\begin{center}
+\includegraphics[scale=2]{kepek/me.pdf}\\\medskip
+Készítette:\\
+{\LARGE Meskó Balázs \\}\medskip
+{\large 2011}
+\end{center}
+\pagebreak
+
+\tableofcontents
+
+%\pagebreak
+
+\chapter{Bevezetés}
+
+Ide majd jön egy kis rizsa arról, hogy mi ez a cucc, meg hogy honnan lett összelopva :-)
+
+A dokumentum \LaTeX-kel készült, az ábrák jelentős része pedig a Ti\textcolor{orange}{\emph{k}}Z csomag segítségével készülhetett el.
+
+\chapter{Lineáris programozás}
+
+\section{A lineáris programozás szimplex módszere}
+
+\subsection{A szimplex módszer}
+
+\subsection{Kiinduló szimplex módszer}
+
+\subsection{Példafeladatok}
+
+\input{feladatok/szimplex/elso}
+
+\input{feladatok/szimplex/masodik}
+
+\chapter{Egészértékű lineáris programozás}
+
+\section{Gomory-vágás}
+
+\section{Dakin-algoritmus}
+
+\chapter{Nemlineáris programozás}
+
+\section{Karush-Kuhn-Tucker feltételek}
+
+\subsection{Példafeladatok}
+
+\begin{multicols}{2}
+
+\input{feladatok/kkt/elso}
+
+\input{feladatok/kkt/masodik}
+
+\section{Extrémum keresés}
+
+\firstline A következő keresési módszerek úgy működnek, hogy veszünk egy keresési intervallumot, amelyet különböző módokon felosztunk, majd megnézzük hogy melyik részében szerepel az optimum. Ezt rekurzívan folytatjuk a leállási feltétel teljesüléséig.
+
+A felosztás mindig két részre bontja az intervallumot az alábbi módon:
+\begin{center}
+\includegraphics{kepek/extremum.pdf}
+\end{center}
+
+A megfelelő intervallum kiválasztása, és a következő $a$ és $b$ paraméterek kiválasztása az alábbi módon történik:
+\begin{alignat*}{3}
+\mbox{Ha } f(c_k)&<f(d_k) &\qquad \mbox{Ha } f(c_k)&\geq f(d_k)\\
+a_{k+1}&=a_k & a_{k+1}&=c_k\\
+b_{k+1}&=d_k & b_{k+1}&=b_k 
+\end{alignat*}
+
+\subsection{Dichotomous-módszer}
+
+\firstline A módszer során az intervallumok meghatározásához egy $\delta$ paramétert alkalmazunk, amelyet előre kiválasztunk. A keresés addig tart, amíg az intervallum hossza nagyobb, mint a megadott $\varepsilon$ paraméter.
+\begin{gather*}
+c_k=a_k+\frac{L_k}{2}-\delta \qquad
+d_k=a_k+\frac{L_k}{2}+\delta 
+\end{gather*}
+
+\subsection{Aranymetszés (Golden Section) módszer}
+
+\firstline A módszernél a keresési intervallumot az aranymetszés arányában osztjuk fel:
+\begin{gather*}
+c_k=a_k+(1-\varphi)L_k \qquad
+d_k=a_k+\varphi L_k
+\end{gather*}
+
+ahol $\varphi=\tfrac{\sqrt{5}-1}{2}$. A keresés szintén addig tart, amíg $L_k>\varepsilon$.
+
+\subsection{Fibonacci-módszer}
+
+\firstline A Fibonacci módszer esetén a Fibonacci-számok segítségével határozzuk meg az intervallumokat. A Fibonacci-számokat az alábbiak szerint definiáljuk:
+\begin{gather*}
+F_n=\begin{cases}
+    0,&\mbox{ha } n=0\\[-0.3em]
+    1,&\mbox{ha } n=1\\[-0.3em]
+    F_{n-1}+F_{n-2},&\mbox{ha } n\geq2
+\end{cases}
+\end{gather*}
+
+Az intervallumok meghatározása pedig:
+\begin{gather*}
+c_k=a_k+\frac{F_{n-k-1}}{F_{n-k+1}}L_k \qquad
+d_k=a_k+\frac{F_{n-k}}{F_{n-k+1}}L_k 
+\end{gather*}
+
+A módszer használatához választunk egy kezdeti $n$ paramétert, amely meghatározza a pontosságot.
+
+\subsection{Példafeladat}
+
+\feladatszam Adott az $f(x)=x^2-4x+3\longrightarrow\min!$ optimalizálási feladat. Adott továbbá az $[a_1,b_1]=[1,3]$ bizonytalansági intervallum.
+\begin{alphanumericlist}
+\item Határozza meg az $[a_2,b_2]$ bizonytalansági intervallumot:
+  \begin{itemize}
+    \item Dichotomous módszerrel $\delta =0,3$ paraméter esetén
+    \item Aranymetszés módszerrel
+    \item Fibonacci módszerrel $n=8$ paraméter esetén
+  \end{itemize}
+\item Határozza meg aranymetszés módszer esetén az $[a_6,b_6]$ bizonytalansági intervallum hosszát!
+\end{alphanumericlist}
+
+\begin{megoldas}
+Az intervallum hossza $L_1=3-1=2$. A Dichotomous módszer esetén
+\begin{alignat*}{4}
+c_1=a_1+\frac{L_1}{2}-\delta&=1+\frac{2}{2}-0,3=1,7 &\qquad d_1=a_1+\frac{L_1}{2}+\delta&=1+\frac{2}{2}-0,3=2,3\\
+f(c_1)&=-0,91 & f(d_1)&=-0,91
+\end{alignat*}
+
+Mivel $f(c_1)\geq f(d_1)$, ezért $a_2=c_1=1,7$, és $b_2=b_1=3$.
+
+Az aranymetszés módszer esetén:
+\begin{alignat*}{4}
+c_1=a_1+(1-\varphi)L_1&=1+0,38197\cdot2=1,7639&\qquad d_1=a_1+\varphi L_1&=1+0,6180\cdot2=2,2361\\
+f(c_1)&=-0,9443&f(d_1)&=-0,9443
+\end{alignat*}
+
+Mivel $f(c_1)\geq f(d_1)$, ezért $a_2=c_1=1,7639$, és $b_2=b_1=3$.
+
+A Fibonacci módszer esetén:
+\begin{alignat*}{4}
+c_1=a_1+\frac{F_6}{F_8}L_1&=1+\frac{8}{21}\cdot2=1,7619&\qquad d_1=a_1+\frac{F_7}{F_8}L_1&=1+\frac{13}{21}\cdot2=2,2381\\
+f(c_1)&=-0,9433&f(d_1)&=-0,9433
+\end{alignat*}
+
+Mivel $f(c_1)\geq f(d_1)$, ezért $a_2=c_1=1,7619$, és $b_2=b_1=3$.
+
+\medskip\hrule\medskip
+
+Az $[a_6,b_6]$ intervallum hossza $L_1\cdot\varphi^5=0,1803$.
+
+\end{megoldas}
+
+\section{Gradiens-módszer}
+
+\subsection{Konjugált gradiens módszer}
+
+\firstline Választunk egy $x_0$ kezdőpontot, ahonnan elindulunk. A kezdeti $d_0$ irány a szokásos módon $d_0=-\nabla f(x_0)$. Az ezt követő elemeket az alábbiakból kaphatjuk:
+\begin{align*}
+x_{k+1}&=x_k+\lambda d_k\\
+d_k&=-\nabla f(x_{k+1})+\alpha_{k+1}d_k\\
+\alpha_{k+1}&=\frac{||\nabla f(x_{k+1})||_2^2}{||\nabla f(x_{k})||_2^2}
+\end{align*}
+
+Másképp megfogalmazva, a gradiensek elemeinek a négyzetösszegét osztjuk el egymással. Az $x_{k+1}$ pont meghatározásához szükséges $\lambda$-t a következő módon kaphatjuk meg:
+
+\begin{numericlist}
+\item Az $x_k+\lambda d_k$ vektort behelyettesítjük az $f$ függvénybe. Ezt $\phi(\lambda)$-val jelöljük.
+\item A $\phi'(\lambda)=0$ megoldásai közül kerülhet ki a $\lambda$ értéke, hiszen itt lehet lokális minimuma a függvénynek. Ha egyetlen $\lambda$ érték jöhet szóba, akkor azt választjuk.
+\item Az eljárás addig tart amíg $\lambda$ nullától különböző vagy egy megadott értéknél abszolútértékben nagyobb.
+\end{numericlist}
+
+\subsection{Példafeladatok}
+
+\input{feladatok/konjgrad/elso}
+
+\input{feladatok/konjgrad/masodik}
+
+\section{Newton és kvázi Newton módszerek}
+
+\subsection{Newton-módszer}
+
+\subsection{Broyden--Fletcher--Goldfarb--Shanno (BFGS) módszer}
+
+$$B_{k+1}=B_k+\frac{y_ky_k^T}{y_k^Ts_k}-\frac{(B_ks_k)(B_ks_k)^T}{(B_ks_k)^Ts_k}$$
+
+A képletben az $s_k$ vektor az $B_ks_k=-\nabla f(x^{(k)})$ lineáris egyenletrendszer megoldása, az $y_k$ pedig az $\nabla f(x^{(k+1)})-\nabla f(x^{(k)})$ különbség.
+
+\subsection{Davidon--Fletcher--Powell (DFP) módszer}
+
+$$D_{k+1}=D_k+\frac{s_ks_k^T}{s_k^Ty_k}-\frac{(D_ky_k)(D_ky_k)^T}{(D_ky_k)^Ty_k}$$
+
+A képletben az $s_k$ vektor az $-D_k\cdot\nabla f(x^{(k)})$ kifejezés értéke, az $y_k$ pedig az $\nabla f(x^{(k+1)})-\nabla f(x^{(k)})$ különbség.
+
+\subsection{Példafeladatok}
+
+\input{feladatok/kvaziNewton/elso}
+
+\chapter{Hálózati folyamok}
+
+\section{Szállítási feladat}
+
+\feladatszam Három raktárban (R) 100, 120 és 120 tonnányi nyersanyagunk van. Az anyagot 5 felhasználó üzembe (Ü) kell szállítani, amelyek igénye rendre 40, 50, 70, 90 és 90 tonna. Az anyagok tonnánkénti szállítási költségét az alábbi táblázat tartalmazza. A feladatunk olyan szállítási terv készítése, mely minimális költséggel juttatja el a 240 tonna anyagot, feltéve hogy a szállítási költség arányos a szállított nyersanyag mennyiségével.
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    space/.style={matrix of nodes,row sep=-\pgflinewidth,column sep=-\pgflinewidth},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+    \matrix (magic) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ]
+    {%
+        $1$ & $1$ & $2$ & $6$ & $9$\\
+        $6$ & $4$ & $3$ & $5$ & $7$\\
+        $5$ & $2$ & $6$ & $4$ & $8$\\
+    };
+    \node[text width = 1cm] at (-2.5,0.6) {$R_1$};
+    \node[text width = 1cm] at (-2.5,0) {$R_2$};
+    \node[text width = 1cm] at (-2.5,-0.6) {$R_3$};
+    \node[text width = 1cm] at (-1.7,1.2) {$Ü_1$};
+    \node[text width = 1cm] at (-0.7,1.2) {$Ü_2$};
+    \node[text width = 1cm] at (0.3,1.2) {$Ü_3$};
+    \node[text width = 1cm] at (1.25,1.2) {$Ü_4$};
+    \node[text width = 1cm] at (2.2,1.2) {$Ü_5$};
+\end{tikzpicture}
+\end{center}
+
+\begin{megoldas}
+Mindenekelőtt vegyünk a költségmátrix sor-oszlopredukcióját:
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    space/.style={matrix of nodes,row sep=-\pgflinewidth,column sep=-\pgflinewidth},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+    \matrix (magic) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ]
+    {%
+        $0$ & $0$ & $1$ & $3$ & $4$\\
+        $0$ & $1$ & $0$ & $0$ & $0$\\
+        $0$ & $0$ & $4$ & $0$ & $2$\\
+    };
+\end{tikzpicture}
+\end{center}
+
+Ez alapján jöhet az első lépés, melyben veszünk egy kezdeti szállítást (észak-nyugati sarok módszerrel), majd utat kersünk címkézéssel:
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+        \node[matrix] (magic_matrix) [matrix of nodes,
+          nodes = {draw, anchor=center},
+          text centered
+        ] at (0,0)
+    {%
+        $40$ & $50$ & -- & -- & --\\
+        $0$ & -- & $70$ & $50$ & $0$\\
+        $0$ & $0$ & -- & $40$ & --\\
+    };   
+        \node[matrix] (magic_array_left) [matrix of nodes,
+          nodes = {draw},
+          text centered
+        ] at (-3.3,0)
+    {%
+        $10$\\
+        $0$\\
+        $80$\\};   
+        \node[matrix] (magic_array_top) [matrix of nodes,
+          nodes = {draw},
+          anchor=center,
+          text centered
+        ] at (0,1.5)
+    {%
+        $0$ & $0$ & $0$ & $0$ & $90$ \\
+    };    
+        \node[matrix] (magic_array_right) [matrix of nodes,
+          nodes = {draw},
+          text centered
+        ] at (3.3,0)
+    {%
+        $+s$\\
+        $+4$\\
+        $+s$\\
+    };    
+        \node[matrix] (magic_array_bottom) [matrix of nodes,
+          nodes = {draw},
+          text centered
+        ] at (0,-1.5)
+    {%
+        $+1$ & $+1$ & $-2$ & $+3$ & $-2$\\
+    };
+    
+    \node[text width= 1.2cm] at (3.4, -1.5) {$\delta=50$};
+
+    \draw[thick] (-3.6,-0.8) rectangle (-3,-0.4); 
+    \draw[thick] (1,-0.6) circle(2.5mm);
+    \draw[thick] (0.7,-0.2) rectangle (1.25,0.2);
+    \draw[thick] (1.96,0) circle(2.5mm);
+    \draw[thick] (1.65,1.3) rectangle (2.25,1.7);
+    \draw[thick] (-3.0,-0.6) -- (0.75,-0.6);
+    \draw[thick] (1,-0.35) -- (1,-0.2);
+    \draw[thick] (1.25,0) -- (1.7,0);
+    \draw[thick] (1.96,0.25) -- (1.96,1.3);
+\end{tikzpicture}
+\end{center}
+
+Folytatjuk az útkeresést:
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+        \node[matrix] (magic_matrix) [matrix of nodes,
+          nodes = {draw, anchor=center},
+          text centered
+        ] at (0,0)
+    {%
+        $40$ & $50$ & -- & -- & --\\
+        $0$ & -- & $70$ & $0$ & $50$\\
+        $0$ & $0$ & -- & $90$ & --\\
+    };   
+        \node[matrix] (magic_array_left) [matrix of nodes,
+          nodes = {draw},
+          text centered
+        ] at (-3.3,0)
+    {%
+        $10$\\
+        $0$\\
+        $30$\\};   
+        \node[matrix] (magic_array_top) [matrix of nodes,
+          nodes = {draw},
+          anchor=center,
+          text centered
+        ] at (0,1.5)
+    {%
+        $0$ & $0$ & $0$ & $0$ & $40$ \\
+    };    
+        \node[matrix] (magic_array_right) [matrix of nodes,
+          nodes = {draw},
+          text centered
+        ] at (3.3,0)
+    {%
+        $+s$\\
+        \\
+        $+s$\\
+    };    
+        \node[matrix] (magic_array_bottom) [matrix of nodes,
+          nodes = {draw},
+          text centered
+        ] at (0,-1.5)
+    {%
+        $+1$ & $+1$ & \phantom{$0$} & $+3$ & \phantom{$0$}\\
+    };
+\end{tikzpicture}
+\end{center}
+
+Mivel nem találtunk új utat, ezért lefedjük a sor-oszlop redukált táblát:
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    space/.style={matrix of nodes,row sep=-\pgflinewidth,column sep=-\pgflinewidth},
+   text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+        \matrix (magic) [matrix of nodes,
+          nodes = {draw, anchor=center},
+          text centered
+        ]
+    {%
+        $0$ & $0$ & $1$ & $3$ & $4$\\
+        $0$ & $1$ & $0$ & $0$ & $0$\\
+        $0$ & $0$ & $4$ & $0$ & $2$\\
+    };
+    \draw[covered,thick] (magic-1-1.north) -- (magic-3-1.south);
+    \draw[covered,thick] (magic-1-2.north) -- (magic-3-2.south);
+    \draw[covered,thick] (magic-1-4.north) -- (magic-3-4.south);
+    \draw[covered,thick] (magic-2-1.west) -- (magic-2-5.east);
+\end{tikzpicture}
+\end{center}
+
+Az $\varepsilon$ értéke jelen esetben 1, frissítjük a táblát:
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    space/.style={matrix of nodes,row sep=-\pgflinewidth,column sep=-\pgflinewidth},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+        \matrix (magic) [matrix of nodes,
+          nodes = {draw, anchor=center},
+          text centered
+        ]
+    {%
+        $0$ & $0$ & $0$ & $3$ & $3$\\
+        $1$ & $2$ & $0$ & $1$ & $0$\\
+        $0$ & $0$ & $3$ & $0$ & $1$\\
+    };
+\end{tikzpicture}
+\end{center}
+\end{megoldas}
+
+\begin{megoldas}
+Folytatjuk a keresést az új táblán:
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+        \node[matrix] (magic_matrix) [matrix of nodes,
+          nodes = {draw, anchor=center},
+          text centered
+        ] at (0,0)
+    {%
+        $40$ & $50$ & $0$ & -- & --\\
+        -- & -- & $70$ & -- & $50$\\
+        $0$ & $0$ & -- & $90$ & --\\
+    };   
+        \node[matrix] (magic_array_left) [matrix of nodes,
+          nodes = {draw},
+          text centered
+        ] at (-3.3,0)
+    {%
+        $10$\\
+        $0$\\
+        $30$\\};   
+        \node[matrix] (magic_array_top) [matrix of nodes,
+          nodes = {draw},
+          anchor=center,
+          text centered
+        ] at (0,1.5)
+    {%
+        $0$ & $0$ & $0$ & $0$ & $40$ \\
+    };    
+        \node[matrix] (magic_array_right) [matrix of nodes,
+          nodes = {draw},
+          text centered
+        ] at (3.3,0)
+    {%
+        $+s$\\
+        $+3$\\
+        $-s$\\
+    };    
+        \node[matrix] (magic_array_bottom) [matrix of nodes,
+          nodes = {draw},
+          text centered
+        ] at (0,-1.5)
+    {%
+        $+1$ & $+1$ & $+1$ & $+3$ & $-2$\\
+    };
+    
+    \node[text width= 1.2cm] at (3.4, -1.5) {$\delta=10$};
+
+    \draw[thick] (-3.6,0.8) rectangle (-3,0.4); 
+    \draw[thick] (0,0.6) circle(2.5mm);
+    \draw[thick] (-0.25,-0.2) rectangle (0.25,0.2);
+    \draw[thick] (1.96,0) circle(2.5mm);
+    \draw[thick] (1.65,1.3) rectangle (2.25,1.7);
+    \draw[thick] (-3.0,0.6) -- (-0.25,0.6);
+    \draw[thick] (0,0.35) -- (0,0.2);
+    \draw[thick] (0.25,0) -- (1.7,0);
+    \draw[thick] (1.96,0.25) -- (1.96,1.3);
+\end{tikzpicture}
+\end{center}
+
+Frissítjük a táblát, majd folytatjuk a keresést:
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+        \node[matrix] (magic_matrix) [matrix of nodes,
+          nodes = {draw, anchor=center},
+          text centered
+        ] at (0,0)
+    {%
+        $40$ & $50$ & $10$ & -- & --\\
+        -- & -- & $60$ & -- & $60$\\
+        $0$ & $0$ & -- & $90$ & --\\
+    };   
+        \node[matrix] (magic_array_left) [matrix of nodes,
+          nodes = {draw},
+          text centered
+        ] at (-3.3,0)
+    {%
+        $0$\\
+        $0$\\
+        $30$\\};   
+        \node[matrix] (magic_array_top) [matrix of nodes,
+          nodes = {draw},
+          anchor=center,
+          text centered
+        ] at (0,1.5)
+    {%
+        $0$ & $0$ & $0$ & $0$ & $30$ \\
+    };    
+        \node[matrix] (magic_array_right) [matrix of nodes,
+          nodes = {draw},
+          text centered
+        ] at (3.3,0)
+    {%
+        $+1$\\
+        \phantom{$0$}\\
+        $+s$\\
+    };    
+        \node[matrix] (magic_array_bottom) [matrix of nodes,
+          nodes = {draw},
+          text centered
+        ] at (0,-1.5)
+    {%
+        $+3$ & $+3$ & $+1$ & $+3$ & $-3$\\
+    };
+    
+    \node[text width= 1.2cm] at (3.4, -1.5) {$\delta=30$};
+
+    \draw[thick] (-3.6,-0.8) rectangle (-3,-0.4); 
+    \draw[thick] (-1.97,-0.6) circle(2.5mm);
+    \draw[thick] (-2.25,0.4) rectangle (-1.7,0.8);
+    \draw[thick] (0,0.6) circle(2.5mm);
+    \draw[thick] (-0.25,-0.2) rectangle (0.25,0.2);
+    \draw[thick] (1.96,0) circle(2.5mm);
+    \draw[thick] (1.65,1.3) rectangle (2.25,1.7);
+    
+    \draw[thick] (-3,-0.6) -- (-2.22,-0.6);
+    \draw[thick] (-1.97,0.4) -- (-1.97,-0.35);
+    \draw[thick] (-1.7,0.6) -- (-0.25,0.6);
+    \draw[thick] (0,0.35) -- (0,0.2);
+    \draw[thick] (0.25,0) -- (1.7,0);
+    \draw[thick] (1.96,0.25) -- (1.96,1.3);
+\end{tikzpicture}
+\end{center}
+
+Ezzel megkaptuk az optimális megoldást.
+\begin{figure}[H]
+\centering
+\includegraphics{kepek/szallitasi.pdf}
+\end{figure}
+A szállítás teljes költsége így 1400 pénzegység. 
+\end{megoldas}
+
+\section{Hozzárendelési feladat}
+
+A hozzárendelési feladat tekinthető egy olyan szállítási feladatnak, ahol minden egyes termelő és fogyasztó kapacitása illetve igénye pontosan 1.
+
+\feladatszam Egy város $A_1, A_2, A_3, A_4$ pontján egy-egy azonos típusú teherautó áll rendelkezésünkre. A város $B_1, B_2, B_3, B_4$ pontjain szükség egy-egy teherautóra. Milyen utasítást adjunk ki, ha azt szeretnénk, hogy a kiszállás költsége a lehető legkisebb legyen, feltéve hogy a költség arányos a távolsággal.
+
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    space/.style={matrix of nodes,row sep=-\pgflinewidth,column sep=-\pgflinewidth},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+    \matrix (magic) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ]
+    {%
+        $7$ & $1$ & $2$ & $6$\\
+        $7$ & $4$ & $3$ & $5$\\
+        $1$ & $2$ & $6$ & $4$\\
+        $9$ & $6$ & $9$ & $4$\\
+    };
+    \node[text width = 1cm] at (-2.1,0.9) {$A_1$};
+    \node[text width = 1cm] at (-2.1,0.3) {$A_2$};
+    \node[text width = 1cm] at (-2.1,-0.3) {$A_3$};
+    \node[text width = 1cm] at (-2.1,-0.9) {$A_4$};
+    \node[text width = 1cm] at (-1.15,1.5) {$B_1$};
+    \node[text width = 1cm] at (-0.15,1.5) {$B_2$};
+    \node[text width = 1cm] at (0.75,1.5) {$B_3$};
+    \node[text width = 1cm] at (1.75,1.5) {$B_4$};
+\end{tikzpicture}
+\end{center}
+
+\begin{megoldas}
+Legelőször vesszük a sor-oszlopredukciót:
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    space/.style={matrix of nodes,row sep=-\pgflinewidth,column sep=-\pgflinewidth},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+    \matrix (magic) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ]
+    {%
+        $6$ & $0$ & $1$ & $5$\\
+        $4$ & $1$ & $0$ & $2$\\
+        $0$ & $1$ & $5$ & $3$\\
+        $5$ & $2$ & $5$ & $0$\\
+    };
+\end{tikzpicture}
+\end{center}
+
+Meghátorozunk egy kezdeti hozzárendelést az észak-nyugati sarok módszerrel:
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    space/.style={matrix of nodes,row sep=-\pgflinewidth,column sep=-\pgflinewidth},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+    \matrix (magic) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ] at (0,0)
+    {%
+        \phantom{$*$} & $*$ & \phantom{$*$} & \phantom{$*$}\\
+        \phantom{$*$} & \phantom{$*$} & $*$ & \phantom{$*$}\\
+        $*$ & \phantom{$*$} & \phantom{$*$} & \phantom{$*$}\\
+        \phantom{$*$} & \phantom{$*$} & \phantom{$*$} & $*$\\
+    };
+    \draw[thick] (0.48,0.3) circle(2.5mm);
+    \draw[thick] (-0.48,0.88) circle(2.5mm);
+    \draw[thick] (-1.48,-0.3) circle(2.5mm);
+    \draw[thick] (1.48,-0.87) circle(2.5mm);
+\end{tikzpicture}
+\end{center}
+
+Jelen esetben nagy szerencsénk volt, azonnal megkaptuk a hozzárendelést:
+\begin{alignat*}{4}
+A_1&\rightarrow B_2&\qquad&A_3&\rightarrow B_1\\
+A_2&\rightarrow B_3&\qquad&A_4&\rightarrow B_4
+\end{alignat*}
+\end{megoldas}
+
+\section{Futószalag feladat}
+
+\firstline Legyenek adottak $I_1.I_2,\ldots,I_n$ személyek, és $J_1,J_2,\ldots,J_n$ egy futószalag munkahelyei. Legyen adott egy $T$ mátrix, amelynek $t_{i,j}$ eleme azt mutatja, hogy $I_i$ személy az $J_j$ munkahelyen mennyi idő alatt végez.
+
+A feladatunk az, hogy megadjunk egy olyan kölcsönösen egyértelmű megfeleltetést, amely esetén a futószalag \emph{ütemideje} a lehető legrövidebb. Az ütemidő a leghosszabb munkafázis hossza.
+
+\subsection{A megoldási algoritmus}
+
+\firstline A feladatot szintén házásság feladatok sorozatával fogjuk megoldani, de \emph{nem} magyar módszerrel. Az alogritmus lépései az alábbiak:
+
+\begin{numericlist}
+\item Egy kezdeti hozzárendelés megadása (pl. a legkisebb időértékekkel).
+\item A hozzárendeléshez tartozó ütemidő meghatározása, ezt jelöljük $\varepsilon$-nal.
+\item Próbáljunk meg az előző $\varepsilon$-nál kisebb ütemidejű hozzárendelést készíteni. Ez egy olyan házasság feladat, ahol akkor lehet hozzárendelés, ha $t_{i,j}<\varepsilon$. Ezen alfeladat megoldhatósága szerint két elágazásunk van:
+    \begin{alphanumericlist}
+    \item Ha nem tudtunk hozzárendelést megadni, akkor az előző hozzárendelés volt a legjobb $\rightarrow$ \textsc{stop} !
+    \item Ha sikerült hozzárendelést találni, akkor ez határozottan jobb hozzárendelés, mint az előző volt. Az algoritmus folytatódik $\rightarrow$ \textsc{ugrás 3)} !
+    \end{alphanumericlist}
+\end{numericlist}
+
+Elég nyilvánvaló, hogy az algoritmus véges lépésben mindenképp végetér.
+
+\section{Az utazó ügynök problémája}
+
+\firstline Az utazó ügynök problémája egy kombinatorikus optimalizálási feladat, és kiváló példa a bonyolultság-elmélet által NP-nehéznek nevezett problémaosztályra.
+
+Adva van $n$ város, illetve az útiköltség bármely két város között, keressük a legolcsóbb utat egy adott városból indulva, amely minden várost pontosan egyszer érint, majd a kiindulási városba ér vissza. Gyakorlatilag $\frac{(n-1)!}{2}$ út közül kell választanunk, ez ugyanis a Hamilton-körök száma az $n$ pontú teljes gráfban (a képlet csak $n>2$ esetén működik, de amúgy is csak ekkor érdekes vizsgálni a problémát).
+
+\subsection{Alkörút eliminációs módszer}
+
+\firstline A módszer során először felépítünk több alkörutat, majd ezekből egyetlen, optimális körutat hozunk létre.
+
+\feladatszam Adott egy 6 városú utazó ügynök probléma, az alábbi költségmátrixszal:
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    space/.style={matrix of nodes,row sep=-\pgflinewidth,column sep=-\pgflinewidth},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+    \matrix (magic) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ]
+    {%
+        \phantom{$0$} & $5$ & $9$ & $2$ & $10$ & $13$\\
+        $12$ & \phantom{$0$} & $3$ & $13$ & $10$ & $6$\\
+        $1$ & $5$ & \phantom{$0$} & $3$ & $10$ & $13$\\
+        $5$ & $4$ & $10$ & \phantom{$0$}& $12$ & $2$\\
+        $11$ & $14$ & $7$ & $4$ &\phantom{$0$} & $5$\\
+        $8$ & $3$ & $11$ & $13$ & $3$ &\phantom{$0$}\\
+    };
+    \draw[thick] (magic-1-1.north west) -- (magic-6-6.south east);
+\end{tikzpicture}
+\end{center}
+
+\begin{megoldas}
+Legelőször vesszük a sor-oszlopredukcióját, felírunk egy kezdeti hozzárendelést, majd címkézünk ha szükséges:
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    space/.style={matrix of nodes,row sep=-\pgflinewidth,column sep=-\pgflinewidth},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+    \matrix (magic) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ] at (0,0)
+    {%
+        \phantom{$0$} & $3$ & $7$ & $0$ & $8$ & $11$\\
+        $9$ & \phantom{$0$} & $0$ & $10$ & $7$ & $3$\\
+        $0$ & $5$ & \phantom{$0$} & $2$ & $9$ & $12$\\
+        $3$ & $2$ & $8$ & \phantom{$0$}& $10$ & $0$\\
+        $7$ & $10$ & $3$ & $0$ &\phantom{$0$} & $1$\\
+        $5$ & $0$ & $8$ & $12$ & $0$ &\phantom{$0$}\\
+    };
+    \draw[thick] (magic-1-1.north west) -- (magic-6-6.south east);
+    \draw[thick] (0.5,1.5) circle(2.5mm);
+    \draw[thick] (2.45,-0.3) circle(2.5mm);
+    \draw[thick] (-0.47,0.9) circle(2.5mm);
+    \draw[thick] (-2.45,0.3) circle(2.5mm);
+    \draw[thick] (-1.47,-1.5) circle(2.5mm);
+    
+    \matrix (magic_right) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ] at (4,0)
+    {%
+        $+4$\\
+        \phantom{$0$}\\
+        \phantom{$0$}\\
+        \phantom{$0$}\\
+        $+s$\\
+        \phantom{$0$}\\
+    };
+    
+        \matrix (magic_bottom) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ] at (0,-2.5)
+    {%
+        \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & $+5$ & \phantom{$0$} & \phantom{$0$}\\
+    };
+    
+    \node[text width = 1cm] at (4.1,-2.5) {$\varepsilon=1$};
+    \draw[covered] (magic-2-1.west) -- (magic-2-6.east);
+    \draw[covered] (magic-3-1.west) -- (magic-3-6.east);
+    \draw[covered] (magic-4-1.west) -- (magic-4-6.east);
+    \draw[covered] (magic-6-1.west) -- (magic-6-6.east);
+    \draw[covered] (magic-1-4.north) -- (magic-6-4.south);
+\end{tikzpicture}
+\end{center}
+
+Mivel nem találtunk megfelelő cserelehetőséget, ezért lefedtük a táblát. Az új tábla:
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    space/.style={matrix of nodes,row sep=-\pgflinewidth,column sep=-\pgflinewidth},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+    \matrix (magic) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ] at (0,0)
+    {%
+        \phantom{$0$} & $2$ & $6$ & $0$ & $7$ & $10$\\
+        $9$ & \phantom{$0$} & $0$ & $11$ & $7$ & $3$\\
+        $0$ & $5$ & \phantom{$0$} & $3$ & $9$ & $12$\\
+        $3$ & $2$ & $8$ & \phantom{$0$}& $10$ & $0$\\
+        $7$ & $10$ & $3$ & $0$ &\phantom{$0$} & $0$\\
+        $5$ & $0$ & $8$ & $12$ & $0$ &\phantom{$0$}\\
+    };
+    \draw[thick] (magic-1-1.north west) -- (magic-6-6.south east);
+    \draw[thick] (0.5,1.5) circle(2.5mm);
+    \draw[thick] (2.45,-0.3) circle(2.5mm);
+    \draw[thick] (-0.47,0.9) circle(2.5mm);
+    \draw[thick] (-2.45,0.3) circle(2.5mm);
+    \draw[thick] (-1.47,-1.5) circle(2.5mm);
+    
+    \matrix (magic_right) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ] at (4,0)
+    {%
+        $+4$\\
+        \phantom{$0$}\\
+        \phantom{$0$}\\
+        $+6$\\
+        $+s$\\
+        \phantom{$0$}\\
+    };
+    
+        \matrix (magic_bottom) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ] at (0,-2.5)
+    {%
+        \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & $+5$ & \phantom{$0$} & $+5$\\
+    };
+    
+    \node[text width = 1cm] at (4.1,-2.5) {$\varepsilon=2$};
+    \draw[covered] (magic-2-1.west) -- (magic-2-6.east);
+    \draw[covered] (magic-3-1.west) -- (magic-3-6.east);
+    \draw[covered] (magic-6-1.west) -- (magic-6-6.east);
+    \draw[covered] (magic-1-4.north) -- (magic-6-4.south);
+    \draw[covered] (magic-1-6.north) -- (magic-6-6.south);
+\end{tikzpicture}
+\end{center}
+
+Ismét lefedtünk, az új tábla:
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    space/.style={matrix of nodes,row sep=-\pgflinewidth,column sep=-\pgflinewidth},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+    \matrix (magic) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ] at (0,0)
+    {%
+        \phantom{$0$} & $0$ & $4$ & $0$ & $5$ & $10$\\
+        $9$ & \phantom{$0$} & $0$ & $13$ & $7$ & $5$\\
+        $0$ & $5$ & \phantom{$0$} & $5$ & $9$ & $14$\\
+        $1$ & $0$ & $6$ & \phantom{$0$}& $8$ & $0$\\
+        $4$ & $7$ & $0$ & $0$ &\phantom{$0$} & $0$\\
+        $5$ & $0$ & $8$ & $13$ & $0$ &\phantom{$0$}\\
+    };
+    \draw[thick] (magic-1-1.north west) -- (magic-6-6.south east);
+    \draw[thick]        ( 0.50,  1.46)  circle(2.5mm);
+    \draw[thick]        ( 2.45, -0.30)  circle(2.5mm);
+    \draw[thick]        (-0.48,  0.88)  circle(2.5mm);
+    \draw[thick]        (-2.45,  0.30)  circle(2.5mm);
+    \draw[thick]        (-1.47, -1.47)  circle(2.5mm);
+    \draw[dashed,thick] (-1.47, -0.30)  circle(2.5mm);
+    \draw[dashed,thick] ( 2.45, -0.90)  circle(2.5mm);
+    \draw[thick]        ( 2.45, -0.70)  -- (2.45, -0.55);
+    \draw[thick]        ( 2.20, -0.30)    -- (-1.22,-0.3);
+    \draw[thick]        (-1.47, -0.53) -- (-1.47,-1.23);
+    
+    \matrix (magic_right) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ] at (4,0)
+    {%
+        $0$\\
+        $+3$\\
+        \phantom{$0$}\\
+        $+6$\\
+        $+s$\\
+        \phantom{$0$}\\
+    };
+    
+        \matrix (magic_bottom) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ] at (0,-2.5)
+    {%
+        \phantom{$0$} & $-4$ & $+5$ & $+5$ & \phantom{$0$} & $+5$\\
+    };
+\end{tikzpicture}
+\end{center}
+
+A vonalkázott körök lesznek az új hozzárendelés tagjai, a tömör körök pedig kikerülnek a hozzárendelésből. Ez alapján két alkörutat kapunk: $1\xrightarrow{2}4\xrightarrow{4}2\xrightarrow{3}3\xrightarrow{1}1$ és $5\xrightarrow{3}6\xrightarrow{5}5$. A két út összsúlya $18$.
+
+Most már felírhatjuk a feladat gráfjának gyökerét is. A gráfot aszerint fogjuk elágaztatni, hogy az $5\rightarrow 6$, vagy az $6\rightarrow 5$ irányt tiltjuk le.
+\end{megoldas}
+
+\begin{megoldas}
+\begin{figure}[H]
+\centering
+\includegraphics{kepek/alkorut.pdf}
+\end{figure}
+
+Most felírjuk az $1$ gráfponthoz tartozó táblát. Ehhez a kezdeti $T$ táblában beírunk a $t_{5,6}$ helyre egy $M$-et, jelezve hogy tiltott, majd sor-oszlop redukció után címkézünk:
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    space/.style={matrix of nodes,row sep=-\pgflinewidth,column sep=-\pgflinewidth},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+    \matrix (magic) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ] at (0,0)
+    {%
+        \phantom{$0$} & $3$ & $7$ & $0$ & $8$ & $11$\\
+        $9$ & \phantom{$0$} & $0$ & $10$ & $7$ & $3$\\
+        $0$ & $5$ & \phantom{$0$} & $2$ & $9$ & $12$\\
+        $3$ & $2$ & $8$ & \phantom{$0$}& $10$ & $0$\\
+        $7$ & $10$ & $3$ & $0$ &\phantom{$0$} & $M$\\
+        $5$ & $0$ & $8$ & $10$ & $0$ &\phantom{$0$}\\
+    };
+    \draw[thick] (magic-1-1.north west) -- (magic-6-6.south east);
+    
+    \matrix (magic_right) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ] at (4,0)
+    {%
+        $+4$\\
+        \phantom{$0$}\\
+        \phantom{$0$}\\
+        \phantom{$0$}\\
+        $+s$\\
+        \phantom{$0$}\\
+    };
+    
+        \matrix (magic_bottom) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ] at (0,-2.5)
+    {%
+        \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & $+5$ & \phantom{$0$} & \phantom{$0$}\\
+    };
+    
+    \node[text width = 1cm] at (4.1,-2.5) {$\varepsilon=3$};
+    \draw[covered] (magic-2-1.west) -- (magic-2-6.east);
+    \draw[covered] (magic-3-1.west) -- (magic-3-6.east);
+    \draw[covered] (magic-4-1.west) -- (magic-4-6.east);
+    \draw[covered] (magic-6-1.west) -- (magic-6-6.east);
+    \draw[covered] (magic-1-4.north) -- (magic-6-4.south);
+\end{tikzpicture}
+\end{center}
+
+Itt megint lefedtünk, az új tábla a következő:
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    space/.style={matrix of nodes,row sep=-\pgflinewidth,column sep=-\pgflinewidth},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+    \matrix (magic) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ] at (0,0)
+    {%
+        \phantom{$0$} & $0$ & $4$ & $0$ & $5$ & $8$\\
+        $9$ & \phantom{$0$} & $0$ & $13$ & $7$ & $3$\\
+        $0$ & $5$ & \phantom{$0$} & $5$ & $9$ & $11$\\
+        $3$ & $2$ & $8$ & \phantom{$0$}& $10$ & $0$\\
+        $4$ & $7$ & $0$ & $0$ &\phantom{$0$} & $M$\\
+        $5$ & $0$ & $8$ & $13$ & $0$ &\phantom{$0$}\\
+    };
+    \draw[thick] (magic-1-1.north west) -- (magic-6-6.south east);
+    \draw[thick] (-1.47,1.5) circle(2.5mm);
+    \draw[thick] (2.45,-0.3) circle(2.5mm);
+    \draw[thick] (-0.49,0.9) circle(2.5mm);
+    \draw[thick] (-2.45,0.3) circle(2.5mm);
+    \draw[thick] (0.49,-0.9) circle(2.5mm);
+    \draw[thick] (1.47,-1.5) circle(2.5mm);
+\end{tikzpicture}
+\end{center}
+
+Az észak-nyugati sarok módszer most jó eredményt adott. A körutak most: $1\xrightarrow{5}2\xrightarrow{3}3\xrightarrow{1}1$ és $4\xrightarrow{2}6\xrightarrow{3}5\xrightarrow{4}4$. Az utak összsúlya $k_1=18$.
+
+s.í.t.
+\end{megoldas}
+
+\subsection{Körút építő algoritmus}
+
+\firstline A módszer a körutat lépésenként fogjuk felépíteni.
+
+\feladatszam Adott egy 5 városú utazó ügynök probléma, az alábbi költségmátrixszal:
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    space/.style={matrix of nodes,row sep=-\pgflinewidth,column sep=-\pgflinewidth},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+    \matrix (magic) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ]
+    {%
+        \phantom{$0$} & $8$ & $3$ & $7$ & $4$\\
+        $13$ & \phantom{$0$} & $4$ & $5$ & $1$\\
+        $2$ & $6$ & \phantom{$0$} & $5$ & $3$\\
+        $8$ & $5$ & $1$ & \phantom{$0$}& $7$\\
+        $7$ & $4$ & $8$ & $2$ &\phantom{$0$}\\
+    };
+    \draw[thick] (magic-1-1.north west) -- (magic-5-5.south east);
+    \node[text width=1cm] at (-2.8,0) {$C_0=$};
+\end{tikzpicture}
+\end{center}
+
+\begin{megoldas}
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    space/.style={matrix of nodes,row sep=-\pgflinewidth,column sep=-\pgflinewidth},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+    \matrix (magic) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ]
+    {%
+        \phantom{$0$} & $3$ & $0$ & $4$ & $1$\\
+        $12$ & \phantom{$0$} & $3$ & $4$ & $0$\\
+        $0$ & $2$ & \phantom{$0$} & $3$ & $1$\\
+        $7$ & $2$ & $0$ & \phantom{$0$}& $6$\\
+        $5$ & $0$ & $6$ & $0$ &\phantom{$0$}\\
+    };
+    \draw[thick] (magic-1-1.north west) -- (magic-5-5.south east);
+    \node[text width=1cm] at (-2.8,0) {$\widehat{C}_0=$};
+\end{tikzpicture}
+\end{center}
+
+Az $u$ és $v$ vektorok elemeinek összege pedig $11$. Ez lesz a $k_0$ értékünk. A továbblépéshez megkeressük a legkisebb költségű $x_{i,j}$ elemet, ahol a $\widehat{c}_{i,j}=0$. Itt két ilyen van, így választanunk egyet. Most a $x_{2,5}$ szerint haladunk tovább:
+\begin{figure}[H]
+\centering
+\includegraphics{kepek/korutepito.pdf}
+\end{figure}
+
+Ha a $2\rightarrow 5$ utazást megtiltjuk, akkor $c_{2,5} = M$. Ekkor a költségmátrix: 
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    space/.style={matrix of nodes,row sep=-\pgflinewidth,column sep=-\pgflinewidth},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+    \matrix (magic) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ]
+    {%
+        \phantom{$0$} & $8$ & $3$ & $7$ & $4$\\
+        $13$ & \phantom{$0$} & $4$ & $5$ & $M$\\
+        $2$ & $6$ & \phantom{$0$} & $5$ & $3$\\
+        $8$ & $5$ & $1$ & \phantom{$0$}& $7$\\
+        $7$ & $4$ & $8$ & $2$ &\phantom{$0$}\\
+    };
+    \draw[thick] (magic-1-1.north west) -- (magic-5-5.south east);
+    \node[text width=1cm] at (-2.8,0) {$C_1=$};
+\end{tikzpicture}
+\end{center}
+
+Az $u$ és $v$ vektorok összege $\lVert u\rVert+\lVert v\rVert=15$. Tehát $k_1=15$, most pedig visszalépünk a 0 gráfpontba. Ha $2\rightarrow 5$ utazást elfogadjuk, akkor a fordított irányt tiltanunk kell és a 2. sort és az 5. oszlopot törölni. Így a $C_2$ költségmátrix a következő:
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    space/.style={matrix of nodes,row sep=-\pgflinewidth,column sep=-\pgflinewidth},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+    \matrix (magic) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ]
+    {%
+        \phantom{$0$} & $8$ & $3$ & $7$ & \phantom{$0$}\\
+        \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$}\\
+        $2$ & $6$ & \phantom{$0$} & $5$ & \phantom{$0$}\\
+        $8$ & $5$ & $1$ & \phantom{$0$}& \phantom{$0$}\\
+        $7$ & $M$ & $8$ & $2$ &\phantom{$0$}\\
+    };
+    \draw[thick] (magic-1-1.north west) -- (magic-5-5.south east);
+    \draw[thick,covered] (magic-1-5.north) -- (magic-5-5.south);
+    \draw[thick,covered] (magic-2-1.west) -- (magic-2-5.east);
+    \node[text width=1cm] at (-2.8,0) {$C_2=$};
+\end{tikzpicture}
+\end{center}
+\end{megoldas}
+
+\begin{megoldas}
+Az $\lVert u\rVert+\lVert v\rVert=12$, viszont itt ehhez hozzá kell adni $c_{2,5}$-t, így $k_2=13$. Mivel ez jobb mint a másik ág értéke, így inkább erre haladunk tovább. Mivel továbbágazzuk a gráfot, így szükség van a $\widehat{C}_2$ mátrixra:
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    space/.style={matrix of nodes,row sep=-\pgflinewidth,column sep=-\pgflinewidth},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+    \matrix (magic) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ]
+    {%
+        \phantom{$0$} & $1$ & $0$ & $4$ & \phantom{$0$}\\
+        \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$}\\
+        $0$ & $0$ & \phantom{$0$} & $3$ & \phantom{$0$}\\
+        $7$ & $0$ & $0$ & \phantom{$0$}& \phantom{$0$}\\
+        $5$ & $M$ & $6$ & $0$ &\phantom{$0$}\\
+    };
+    \draw[thick] (magic-1-1.north west) -- (magic-5-5.south east);
+    \draw[thick,covered] (magic-1-5.north) -- (magic-5-5.south);
+    \draw[thick,covered] (magic-2-1.west) -- (magic-2-5.east);
+    \node[text width=1cm] at (-2.8,0) {$\widehat{C}_2=$};
+\end{tikzpicture}
+\end{center}
+
+Ismét két legolcsóbb lehetőségünk van, most a $x_{3,1}$-et választjuk.
+\begin{figure}[H]
+\centering
+\includegraphics{kepek/korutepito2.pdf}
+\end{figure}
+\begin{multicols}{2}
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    space/.style={matrix of nodes,row sep=-\pgflinewidth,column sep=-\pgflinewidth},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+    \matrix (magic) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ]
+    {%
+        \phantom{$0$} & $8$ & $3$ & $7$ & \phantom{$0$}\\
+        \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$}\\
+        $M$ & $6$ & \phantom{$0$} & $5$ & \phantom{$0$}\\
+        $8$ & $5$ & $1$ & \phantom{$0$}& \phantom{$0$}\\
+        $7$ & $M$ & $8$ & $2$ &\phantom{$0$}\\
+    };
+    \draw[thick] (magic-1-1.north west) -- (magic-5-5.south east);
+    \draw[thick,covered] (magic-1-5.north) -- (magic-5-5.south);
+    \draw[thick,covered] (magic-2-1.west) -- (magic-2-5.east);
+    \node[text width=1cm] at (-2.8,0) {$C_3=$};
+\end{tikzpicture}
+
+$\lVert u\rVert+\lVert v\rVert=17$\\$k_3=18$
+\end{center}
+
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    space/.style={matrix of nodes,row sep=-\pgflinewidth,column sep=-\pgflinewidth},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+    \matrix (magic) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ]
+    {%
+        \phantom{$0$} & $8$ & $M$ & $7$ & \phantom{$0$}\\
+        \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$}\\
+        \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$}\\
+        \phantom{$0$} & $5$ & $1$ & \phantom{$0$}& \phantom{$0$}\\
+        \phantom{$0$} & $M$ & $8$ & $2$ &\phantom{$0$}\\
+    };
+    \draw[thick] (magic-1-1.north west) -- (magic-5-5.south east);
+    \draw[thick,covered] (magic-1-5.north) -- (magic-5-5.south);
+    \draw[thick,covered] (magic-1-1.north) -- (magic-5-1.south);
+    \draw[thick,covered] (magic-2-1.west) -- (magic-2-5.east);
+    \draw[thick,covered] (magic-3-1.west) -- (magic-3-5.east);
+    \node[text width=1cm] at (-2.8,0) {$C_4=$};
+\end{tikzpicture}
+
+$\lVert u\rVert+\lVert v\rVert=11$\\$k_4=14$
+\end{center}
+\end{multicols}
+
+Mivel a 4-es gráfpontban kedvezőbb az $k_4$ érték, ezért arra megyünk tovább.
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    space/.style={matrix of nodes,row sep=-\pgflinewidth,column sep=-\pgflinewidth},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+    \matrix (magic) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ]
+    {%
+        \phantom{$0$} & $0$ & $M$ & $0$ & \phantom{$0$}\\
+        \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$}\\
+        \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$}\\
+        \phantom{$0$} & $3$ & $0$ & \phantom{$0$}& \phantom{$0$}\\
+        \phantom{$0$} & $M$ & $6$ & $0$ &\phantom{$0$}\\
+    };
+    \draw[thick] (magic-1-1.north west) -- (magic-5-5.south east);
+    \draw[thick,covered] (magic-1-5.north) -- (magic-5-5.south);
+    \draw[thick,covered] (magic-1-1.north) -- (magic-5-1.south);
+    \draw[thick,covered] (magic-2-1.west) -- (magic-2-5.east);
+    \draw[thick,covered] (magic-3-1.west) -- (magic-3-5.east);
+    \node[text width=1cm] at (-2.8,0) {$\widehat{C}_4=$};
+\end{tikzpicture}
+\end{center}
+
+Most csak egyetlen opciónk van, az $x_{4,3}$:
+\begin{figure}[H]
+\centering
+\includegraphics{kepek/korutepito3.pdf}
+\end{figure}
+\end{megoldas}
+
+\begin{megoldas}
+\begin{multicols}{2}
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    space/.style={matrix of nodes,row sep=-\pgflinewidth,column sep=-\pgflinewidth},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+    \matrix (magic) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ]
+    {%
+        \phantom{$0$} & $8$ & $M$ & $7$ & \phantom{$0$}\\
+        \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$}\\
+        \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$}\\
+        \phantom{$0$} & $5$ & $M$ & \phantom{$0$}& \phantom{$0$}\\
+        \phantom{$0$} & $M$ & $8$ & $2$ &\phantom{$0$}\\
+    };
+    \draw[thick] (magic-1-1.north west) -- (magic-5-5.south east);
+    \draw[thick,covered] (magic-1-5.north) -- (magic-5-5.south);
+    \draw[thick,covered] (magic-1-1.north) -- (magic-5-1.south);
+    \draw[thick,covered] (magic-2-1.west) -- (magic-2-5.east);
+    \draw[thick,covered] (magic-3-1.west) -- (magic-3-5.east);
+    \node[text width=1cm] at (-2.8,0) {$C_5=$};
+\end{tikzpicture}
+
+$\lVert u\rVert+\lVert v\rVert=10$\\$k_5=13$
+\end{center}
+
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    space/.style={matrix of nodes,row sep=-\pgflinewidth,column sep=-\pgflinewidth},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+    \matrix (magic) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ]
+    {%
+        \phantom{$0$} & $8$ & \phantom{$0$} & $7$ & \phantom{$0$}\\
+        \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$}\\
+        \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$}\\
+        \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$}& \phantom{$0$}\\
+        \phantom{$0$} & $M$ & \phantom{$0$} & $2$ &\phantom{$0$}\\
+    };
+    \draw[thick] (magic-1-1.north west) -- (magic-5-5.south east);
+    \draw[thick,covered] (magic-1-5.north) -- (magic-5-5.south);
+    \draw[thick,covered] (magic-1-1.north) -- (magic-5-1.south);
+    \draw[thick,covered] (magic-1-3.north) -- (magic-5-3.south);
+    \draw[thick,covered] (magic-2-1.west) -- (magic-2-5.east);
+    \draw[thick,covered] (magic-3-1.west) -- (magic-3-5.east);
+    \draw[thick,covered] (magic-4-1.west) -- (magic-4-5.east);
+    \node[text width=1cm] at (-2.8,0) {$C_6=$};
+\end{tikzpicture}
+
+$\lVert u\rVert+\lVert v\rVert=10$\\$z_6=14$
+\end{center}
+\end{multicols}
+
+Most így kaptunk egy lehetséges megoldást, de az alsó határokat is megnézve nem biztos hogy ez az optimális. A 3-mas gráfpontból továbbmenve jobb megoldást biztosan nem kaphatunk, az 5-ösből viszont még lehetséges. Ezért lássuk a {$\widehat{C}_5$} mátrixot:
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    space/.style={matrix of nodes,row sep=-\pgflinewidth,column sep=-\pgflinewidth},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+    \matrix (magic) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ]
+    {%
+        \phantom{$0$} & $1$ & $M$ & $0$ & \phantom{$0$}\\
+        \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$}\\
+        \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$}\\
+        \phantom{$0$} & $0$ & $M$ & \phantom{$0$}& \phantom{$0$}\\
+        \phantom{$0$} & $M$ & $6$ & $0$ &\phantom{$0$}\\
+    };
+    \draw[thick] (magic-1-1.north west) -- (magic-5-5.south east);
+    \draw[thick,covered] (magic-1-5.north) -- (magic-5-5.south);
+    \draw[thick,covered] (magic-1-1.north) -- (magic-5-1.south);
+    \draw[thick,covered] (magic-2-1.west) -- (magic-2-5.east);
+    \draw[thick,covered] (magic-3-1.west) -- (magic-3-5.east);
+    \node[text width=1cm] at (-2.8,0) {$\widehat{C}_5=$};
+\end{tikzpicture}
+\end{center}
+
+Az $x_{5,4}$-et választjuk:
+\begin{figure}[H]
+\centering
+\includegraphics{kepek/korutepito4.pdf}
+\end{figure}
+
+\begin{multicols}{2}
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    space/.style={matrix of nodes,row sep=-\pgflinewidth,column sep=-\pgflinewidth},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+    \matrix (magic) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ]
+    {%
+        \phantom{$0$} & $8$ & $M$ & $7$ & \phantom{$0$}\\
+        \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$}\\
+        \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$}\\
+        \phantom{$0$} & $5$ & $M$ & \phantom{$0$}& \phantom{$0$}\\
+        \phantom{$0$} & $M$ & $8$ & $M$ &\phantom{$0$}\\
+    };
+    \draw[thick] (magic-1-1.north west) -- (magic-5-5.south east);
+    \draw[thick,covered] (magic-1-5.north) -- (magic-5-5.south);
+    \draw[thick,covered] (magic-1-1.north) -- (magic-5-1.south);
+    \draw[thick,covered] (magic-2-1.west) -- (magic-2-5.east);
+    \draw[thick,covered] (magic-3-1.west) -- (magic-3-5.east);
+    \node[text width=1cm] at (-2.8,0) {$C_7=$};
+\end{tikzpicture}
+
+$\lVert u\rVert+\lVert v\rVert=20$\\$k_7=23$
+\end{center}
+
+\begin{center}
+\begin{tikzpicture}[
+    covered/.style={decorate, draw=black, decoration={complete sines,amplitude=5pt, segment length=15pt}},
+    cell/.style={nodes={rectangle,draw=black}},
+    space/.style={matrix of nodes,row sep=-\pgflinewidth,column sep=-\pgflinewidth},
+    text height = 3mm, anchor = center, text width = 7mm, nodes in empty cells,row sep=-\pgflinewidth,column sep=-\pgflinewidth,
+]
+    \matrix (magic) [matrix of nodes,
+          nodes = {draw},
+          text centered
+    ]
+    {%
+        \phantom{$0$} & $8$ & $M$ & \phantom{$0$} & \phantom{$0$}\\
+        \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$}\\
+        \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$}\\
+        \phantom{$0$} & $5$ & $M$ & \phantom{$0$}& \phantom{$0$}\\
+        \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$} & \phantom{$0$}\\
+    };
+    \draw[thick] (magic-1-1.north west) -- (magic-5-5.south east);
+    \draw[thick,covered] (magic-1-5.north) -- (magic-5-5.south);
+    \draw[thick,covered] (magic-1-1.north) -- (magic-5-1.south);
+    \draw[thick,covered] (magic-1-4.north) -- (magic-5-4.south);
+    \draw[thick,covered] (magic-2-1.west) -- (magic-2-5.east);
+    \draw[thick,covered] (magic-3-1.west) -- (magic-3-5.east);
+    \draw[thick,covered] (magic-5-1.west) -- (magic-5-5.east);
+    \node[text width=1cm] at (-2.8,0) {$C_8=$};
+\end{tikzpicture}
+
+$\lVert u\rVert+\lVert v\rVert=13$\\$z_8=18$
+\end{center}
+\end{multicols}
+
+Jól látható, hogy ez rosszabb, mint a $z_6$ érték, tehát ez nem lehet optimális megoldás. Tehát az egyetlen optimum a 6-os gráfpontnál található, ez pedig:
+\begin{figure}[H]
+\centering
+\includegraphics{kepek/korutepito5.pdf}
+\end{figure}
+\end{megoldas}
+
+\begin{megoldas}
+Ezzel megoldottuk a feladatot, a teljesség kedvéért még lerajzoljuk a teljes gráfot:
+\begin{figure}[H]
+\centering
+\includegraphics{kepek/korutepito6.pdf}
+\end{figure}
+
+Innen nagyon jól láthatjuk, hogy az 1-es, 3-mas és 7-es gráfpontokból továbbhaladva sem kaphatunk a $z_6$ értéknél kisebbet.
+\end{megoldas}
+\end{document}

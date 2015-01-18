@@ -1,0 +1,109 @@
+\feladatszam Adott az $x_1^2+\nicefrac{1}{2}x_2^2\longrightarrow\min!$ optimalizási feladat. Adott továbbá egy $\mathbf{x}_5=\left(\begin{smallmatrix}1\\-1\end{smallmatrix}\right)$ közelítő vektor és a Hesse-féle mátrixot helyettesítő $\left(\begin{smallmatrix}2&-1\\-1&4\end{smallmatrix}\right)$ mátrix. A megoldást kvázi-Newton módszerrel kívánjuk meghatározni.
+\begin{alphanumericlist}
+\item Határozza meg az $\mathbf{x}_6$ közelítő megoldásvektort és a Hesse mátrixot helyettesítő új mátrixot, ha nem alkalmaz vonalmenti keresést!
+\item Határozza meg az $\mathbf{x}_6$ közelítő megoldásvektort ha alkalmaz vonalmenti keresést! A Hesse mátrixot helyettesítő új mátrixot nem kell meghatározni, csak a kiszámításához szükséges két vektort számolja ki!
+\end{alphanumericlist}
+
+\begin{megoldas}
+A feladat megoldható mind DFP, mind BFGS módszerrel. Mindkét módszerhez szükségünk van a $f$ függvény gradiensére, így előszer ezt számoljuk ki:
+\begin{gather*}
+\nabla f=\left(\begin{array}{c}2x_1\\x_2\end{array}\right)
+\end{gather*}
+
+A módszerek közül először tekintsük a DFP módszert! Ekkor a következő egyenletet kell megoldanunk:
+\begin{alignat*}{1}
+s_5&=-D_5\cdot\nabla f(\mathbf{x}_5)\\
+s_5&=-\left(\begin{array}{cc}2&-1\\-1&4\end{array}\right)\cdot\left(\begin{array}{c}2\\-1\end{array}\right)\\
+s_5&=\left(\begin{array}{c}-5\\6\end{array}\right)
+\end{alignat*}
+
+A $D_6$ mátrix kiszámításához az alábbi képletbe kell behelyettesítenünk:
+\begin{gather*}
+D_6=D_5+\frac{s_5s_5^T}{s_5^Ty_5}-\frac{(D_5y_5)(D_5y_5)^T}{(D_5y_5)^Ty_5}
+\end{gather*}
+
+Az $s_5$-öt már kiszámoltuk, az $y_5$ értéke pedig $\nabla f(\mathbf{x}_6)-\nabla f(\mathbf{x}_5)=\nabla f(\mathbf{x}_5+s_5)-\nabla f(\mathbf{x}_5)=\left(\begin{smallmatrix}12\\-7\end{smallmatrix}\right)-\left(\begin{smallmatrix}2\\-1\end{smallmatrix}\right)=\left(\begin{smallmatrix}10\\-8\end{smallmatrix}\right)$. Így a következőt kell kiszámolni:
+\begin{gather*}
+D_6=\left(\begin{array}{cc}2&-1\\-1&4\end{array}\right)+
+\frac{\overbracket[0.75pt]{\left(\begin{smallmatrix}-5\\6\end{smallmatrix}\right)
+\cdot\left(\begin{smallmatrix}-5&6\end{smallmatrix}\right)}^{\left(\begin{smallmatrix}25&-30\\-30&36\end{smallmatrix}\right)}}
+{\underbracket[.75pt]{\left(\begin{smallmatrix}-5&6\end{smallmatrix}\right)
+\cdot\left(\begin{smallmatrix}10\\-8\end{smallmatrix}\right)}_{-98}}-
+\frac{\overbracket[.75pt]{\left[\left(\begin{smallmatrix}2&-1\\-1&4\end{smallmatrix}\right)\cdot
+\left(\begin{smallmatrix}10\\-8\end{smallmatrix}\right)\right]
+\left[\left(\begin{smallmatrix}2&-1\\-1&4\end{smallmatrix}\right)\cdot
+\left(\begin{smallmatrix}10\\-8\end{smallmatrix}\right)\right]^T}^{\left(\begin{smallmatrix}784&-1176\\-1176&1764\end{smallmatrix}\right)}
+}{\underbracket[.75pt]{\left[\left(\begin{smallmatrix}2&-1\\-1&4\end{smallmatrix}\right)\cdot
+\left(\begin{smallmatrix}10\\-8\end{smallmatrix}\right)\right]^T\cdot
+\left(\begin{smallmatrix}10\\-8\end{smallmatrix}\right)}_{616}
+}
+\end{gather*}
+
+A mátrix tehát a következő értékű:
+\begin{gather*}
+D_6=\left(\begin{array}{cc}2-\nicefrac{25}{98}-\nicefrac{784}{616}&-1+\nicefrac{30}{98}+\nicefrac{1176}{616}\\-1+\nicefrac{30}{98}+\nicefrac{1176}{616}&4-\nicefrac{36}{98}-\nicefrac{1764}{616}\end{array}\right)\approx\left(\begin{array}{cc}3,0176&1,2152\\1,2152&0,7690\end{array}\right)
+\end{gather*}
+
+Iránymenti keresés esetén annyi változik, hogy $\mathbf{x}_6=\mathbf{x}_5+\lambda d_5$-re, ahol $d_5=s_5$ (csak azért nevezzük át $d$-re, hogy jelezzük irányról van szó) és $\lambda$ értéke az $\varphi(\lambda)=f(1-5\lambda,-1+6\lambda)$ függvény minimuma.
+\begin{alignat*}{1}
+\varphi(\lambda)&=(1-5\lambda)^2+\tfrac{1}{2}(-1+6\lambda)^2\\
+&=25\lambda^2-10\lambda+1+\tfrac{1}{2}(36\lambda^2-12\lambda+1)\\
+&=43\lambda^2-16\lambda+\tfrac{3}{2}
+\end{alignat*}
+\end{megoldas}
+
+\begin{megoldas}
+A függvény minimuma ott található, ahol az első derivált értéke nulla:
+\begin{alignat*}{1}
+\varphi'(\lambda)&=0\\
+86\lambda-16&=0\\
+86\lambda&=16\\
+\lambda&=\nicefrac{16}{86}
+\end{alignat*}
+
+Ebből tehát az $\mathbf{x}_6$ értéke $\left(\begin{smallmatrix}0,0698\\0,1163\end{smallmatrix}\right)$. A DFP módszer Hesse mátrixot helyettesítő mátrixához már csak az $y_5$-ra van szükségünk az pedig:
+\begin{gather*}
+y_5=\left(\begin{array}{c}2\cdot 0,0698-2\\0,1163+1\end{array}\right)=\left(\begin{array}{c}-2,1395\\1,1163\end{array}\right)
+\end{gather*}
+
+A BFGS módszer esetén a következő egyenletet kell megoldanunk:
+\begin{alignat*}{1}
+B_5s_5&=-\nabla f(\mathbf{x}_5)\\
+\left(\begin{array}{cc}2&-1\\-1&4\end{array}\right)s_5&=\left(\begin{array}{c}-2\\1\end{array}\right)\\
+s_5&=\left(\begin{array}{c}-1\\0\end{array}\right)
+\end{alignat*}
+
+A $B_6$ mátrix kiszámításához az alábbi képletbe kell behelyettesítenünk:
+\begin{gather*}
+B_6=B_5+\frac{y_5y_5^T}{y_5^Ts_5}-\frac{(B_5s_5)(B_5s_5)^T}{(B_5s_5)^Ts_5}
+\end{gather*}
+Az $s_5$-öt már kiszámoltuk, az $y_5$ értéke pedig $\nabla f(\mathbf{x}_6)-\nabla f(\mathbf{x}_5)=\nabla f(\mathbf{x}_5+s_5)-\nabla f(\mathbf{x}_5)=\left(\begin{smallmatrix}0\\-1\end{smallmatrix}\right)-\left(\begin{smallmatrix}2\\-1\end{smallmatrix}\right)=\left(\begin{smallmatrix}-2\\0\end{smallmatrix}\right)$. Így a következőt kell kiszámolni:
+\begin{gather*}
+D_6=\left(\begin{array}{cc}2&-1\\-1&4\end{array}\right)+
+\frac{\overbracket[.75pt]{\left(\begin{smallmatrix}-2\\0\end{smallmatrix}\right)
+\cdot\left(\begin{smallmatrix}-2&0\end{smallmatrix}\right)}^{\left(\begin{smallmatrix}4&0\\0&0\end{smallmatrix}\right)}}
+{\underbracket[.75pt]{\left(\begin{smallmatrix}-2&0\end{smallmatrix}\right)
+\cdot\left(\begin{smallmatrix}-1\\0\end{smallmatrix}\right)}_{2}}-
+\frac{\overbracket[.75pt]{\left[\left(\begin{smallmatrix}2&-1\\-1&4\end{smallmatrix}\right)\cdot
+\left(\begin{smallmatrix}-1\\0\end{smallmatrix}\right)\right]
+\left[\left(\begin{smallmatrix}2&-1\\-1&4\end{smallmatrix}\right)\cdot
+\left(\begin{smallmatrix}-1\\0\end{smallmatrix}\right)\right]^T}^{\left(\begin{smallmatrix}4&-2\\-2&1\end{smallmatrix}\right)}
+}{\underbracket[.75pt]{\left[\left(\begin{smallmatrix}2&-1\\-1&4\end{smallmatrix}\right)\cdot
+\left(\begin{smallmatrix}-1\\0\end{smallmatrix}\right)\right]^T\cdot
+\left(\begin{smallmatrix}-1\\0\end{smallmatrix}\right)}_{2}
+}\\
+D_6=\left(\begin{array}{cc}2&0\\0&\nicefrac{7}{2}\end{array}\right)
+\end{gather*}
+
+Iránymenti keresés esetén $\mathbf{x}_6=\mathbf{x}+\lambda d_5$. A $\lambda$ meghatározásához a következő egyenlet minimumát keressük:
+\begin{gather*}
+\varphi(\lambda)=(1-\lambda)^2+\tfrac{1}{2}(-1)^2=\lambda^2-2\lambda+1+\tfrac{1}{2}=\lambda^2-2\lambda+\tfrac{3}{2}\\
+\varphi'(\lambda)=0 \longrightarrow 2\lambda-2=0 \longrightarrow \lambda=1
+\end{gather*}
+
+Így tehát:
+\begin{gather*}
+y_5=\left(\begin{array}{c}-2\\0\end{array}\right)
+\end{gather*}
+Jelen esetben az iránymenti keresés nélküli módszer egybeesik az iránymenti keresésessel.
+\end{megoldas}

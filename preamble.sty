@@ -1,0 +1,354 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%      Használt csomagok betöltése       %%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[margin=1in]{geometry}
+% betűtípus
+\usepackage{fourier}
+\usepackage{libertine}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+% fejléc, lábléc
+\usepackage{fancyhdr}
+% verbatim a forráskódoknak
+\usepackage{fancyvrb}
+% színezés
+\usepackage{xcolor}
+% képek
+\usepackage{graphicx}
+% nyelvi csomag
+\usepackage[magyar]{babel}
+% aláhúzás támogatása
+\usepackage[normalem]{ulem}
+% AMS matek
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{mathtools,thmtools}
+\usepackage{calc}
+% többsoros táblázat
+\usepackage{multirow}
+% a fejezetek címe Biolinium betűtípussal
+\usepackage{sectsty}
+\allsectionsfont{\sffamily}
+% ábrákhoz
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{tikz}
+% TikZ cuccok
+\usepackage{tikz-inet}
+\usetikzlibrary{decorations,matrix,positioning,arrows}
+% blokkmátrixok
+\usepackage{blkarray}
+% spéci karakterek
+\usepackage{textcomp}
+% nincs implicit oldalszám
+\usepackage{nopageno}
+% linkek színei
+\usepackage[unicode,colorlinks=true,linkcolor=mycolor]{hyperref}
+\definecolor{mycolor}{rgb}{0.0,0.0,0.3}
+% magyar tipográfia
+\frenchspacing
+% szép törtek
+\usepackage{units}
+% több hasáb
+\usepackage{multicol}
+% szaggatott vonal arrayben
+\usepackage{arydshln}
+% sorköz
+\usepackage{setspace}
+\onehalfspacing
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%      Felsorolások finomhangolása       %%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\enumhook{}
+\def\enumhooki{}
+\def\enumhookii{}
+\def\enumhookiii{}
+\def\enumhookiv{}
+\def\itemhook{}
+\def\itemhooki{}
+\def\itemhookii{}
+\def\itemhookiii{}
+\def\itemhookiv{}
+\def\descripthook{}
+\def\enumerate{%
+  \ifnum \@enumdepth >\thr@@\@toodeep\else
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+      \expandafter
+      \list
+        \csname label\@enumctr\endcsname
+        {\usecounter\@enumctr\def\makelabel##1{\hss\llap{##1}}%
+          \enumhook \csname enumhook\romannumeral\the\@enumdepth\endcsname}%
+  \fi}
+\def\itemize{%
+  \ifnum \@itemdepth >\thr@@\@toodeep\else
+    \advance\@itemdepth\@ne
+    \edef\@itemitem{labelitem\romannumeral\the\@itemdepth}%
+    \expandafter
+    \list
+      \csname\@itemitem\endcsname
+      {\def\makelabel##1{\hss\llap{##1}}%
+        \itemhook \csname itemhook\romannumeral\the\@itemdepth\endcsname}%
+  \fi}
+\renewenvironment{description}
+                 {\list{}{\labelwidth\z@ \itemindent-\leftmargin
+                          \let\makelabel\descriptionlabel\descripthook}}
+                 {\endlist}
+
+% A konkrét beállítás
+\renewcommand{\itemhook}{
+  \setlength{\topsep}{0pt}
+  \setlength{\itemsep}{0pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}}
+\renewcommand{\enumhook}{
+  \setlength{\topsep}{0pt}
+  \setlength{\itemsep}{0pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}}
+
+% alfanumerikus számozású lista
+\makeatletter\newenvironment{alphanumericlist}{
+   \renewcommand{\labelenumi}{\alph{enumi})}
+   \begin{enumerate}}{\end{enumerate}
+}\makeatother
+
+% numerikus számozású lista
+\makeatletter\newenvironment{numericlist}{
+   \renewcommand{\labelenumi}{\arabic{enumi})}
+   \begin{enumerate}}{\end{enumerate}
+}\makeatother
+  
+\setlength{\headheight}{15pt}
+
+\setcounter{secnumdepth}{3}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% Fejezetszámozás és tartalomjegyzék magyarítása %%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\makeatletter
+\let\Hy@magyar@saved@refstepcounter\refstepcounter
+\addto\extrasmagyar{%
+  \let\H@refstepcounter\refstepcounter
+  \let\refstepcounter\Hy@magyar@saved@refstepcounter
+  \expandafter\renewcommand\expandafter*\expandafter\@ssect
+      \expandafter[\expandafter 5\expandafter]\expandafter{%
+    \expandafter\def\expandafter\@currentlabelname\expandafter{%
+      \expandafter #\expandafter 5\expandafter
+    }%
+    \@ssect{#1}{#2}{#3}{#4}{#5}%
+    \phantomsection
+  }%
+  \expandafter\Hy@magyar@patch@sect\expandafter{%
+    \@sect{#1}{#2}{#3}{#4}{#5}{#6}[{#7}]{#8}%
+  }{#1#2#3#4#5#6[#7]#8}{#2}{#7}%
+}
+\def\Hy@magyar@patch@sect#1#2#3#4{%
+  \def\@sect#2{%
+    \setcounter{section@level}{#3}%
+    \def\@currentlabelname{#4}%
+    \ifnum #3>\c@secnumdepth
+      \Hy@GlobalStepCount\Hy@linkcounter
+      \xdef\@currentHref{section*.\the\Hy@linkcounter}%
+    \fi
+    #1%
+    \ifnum #3>\c@secnumdepth
+      \Hy@raisedlink{\hyper@anchorstart{\@currentHref}\hyper@anchorend}%
+    \fi
+  }%
+}
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%      A Pygments csomag betöltése       %%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\def\PY@tok@gd{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+
+\def\PY@tok@gu{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\def\PY@tok@gt{\def\PY@tc##1{\textcolor[rgb]{0.00,0.25,0.82}{##1}}}
+\def\PY@tok@gs{\let\PY@bf=\textbf}
+\def\PY@tok@gr{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\def\PY@tok@cm{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\def\PY@tok@vg{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\def\PY@tok@m{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\def\PY@tok@mh{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\def\PY@tok@go{\def\PY@tc##1{\textcolor[rgb]{0.50,0.50,0.50}{##1}}}
+\def\PY@tok@ge{\let\PY@it=\textit}
+\def\PY@tok@vc{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\def\PY@tok@il{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\def\PY@tok@cs{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\def\PY@tok@cp{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\def\PY@tok@gi{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\def\PY@tok@gh{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\def\PY@tok@ni{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\def\PY@tok@nl{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\def\PY@tok@nn{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\def\PY@tok@no{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\def\PY@tok@na{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\def\PY@tok@nb{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\def\PY@tok@nc{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\def\PY@tok@nd{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\def\PY@tok@ne{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\def\PY@tok@nf{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\def\PY@tok@si{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\def\PY@tok@s2{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\def\PY@tok@vi{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\def\PY@tok@nt{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\def\PY@tok@nv{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\def\PY@tok@s1{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\def\PY@tok@sh{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\def\PY@tok@sc{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\def\PY@tok@sx{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\def\PY@tok@bp{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\def\PY@tok@c1{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\def\PY@tok@kc{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\def\PY@tok@c{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\def\PY@tok@mf{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\def\PY@tok@err{\def\PY@bc##1{\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{##1}}}
+\def\PY@tok@kd{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\def\PY@tok@ss{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\def\PY@tok@sr{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\def\PY@tok@mo{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\def\PY@tok@kn{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\def\PY@tok@mi{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\def\PY@tok@gp{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\def\PY@tok@o{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\def\PY@tok@kr{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\def\PY@tok@s{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\def\PY@tok@kp{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\def\PY@tok@w{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\def\PY@tok@kt{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\def\PY@tok@ow{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\def\PY@tok@sb{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\def\PY@tok@k{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\def\PY@tok@se{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\def\PY@tok@sd{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+% Másfeles sortávolság
+%\linespread{1.3}
+
+% Táblázatokba paraméterezhető szélesség
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{L}[1]{>{\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\hfill\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+% Táblázatok sormagasság
+\renewcommand{\arraystretch}{1.3}
+
+% A Tilde karakter
+\newcommand\TILDE{\raise.17ex\hbox{$\scriptstyle\sim$}}
+
+% Fejezetek első sora
+\newcommand\firstline{\indent\indent}
+
+% környezet a feladatmegoldásokra
+\makeatletter\newenvironment{megoldas}{
+   \singlespacing
+   \noindent\hskip-0.05in\begin{lrbox}{\@tempboxa}
+   \begin{minipage}[t]{\columnwidth}\setlength{\parindent}{0.25in}}{\end{minipage}\end{lrbox}%
+   \colorbox{LightGoldenrodYellow}{\usebox{\@tempboxa}}
+}\makeatother
+
+% feladatszámozás
+\newcounter{feladat}
+\setcounter{feladat}{1}
+\newcommand\feladatszam
+{\noindent\begin{tabular}{|c|}\hline
+\arabic{feladat}\stepcounter{feladat}\\\hline
+\end{tabular}
+}
+
+% karikázás pivotáláshoz
+\newcommand*\circled[1]{%
+  \begin{tikzpicture}[baseline=(C.base)]
+    \node[draw,circle,inner sep=1pt](C) {#1};
+  \end{tikzpicture}}
+% és téglalap ha kell
+\newcommand*\squared[1]{%
+  \begin{tikzpicture}[baseline=(C.base)]
+    \node[draw,rectangle,inner sep=2pt](C) {#1};
+  \end{tikzpicture}}
+% a fejezetek elé ne írja a főfejeztek számát
+\renewcommand*\thesection{\arabic{section}}
+
+% hack a törteket tartalmazó táblázatokhoz
+\def\xstrut{\rule[-1.5ex]{0pt}{4ex}}
+
+%Definíciók
+\theoremstyle{definition}
+% Fix latex
+\def\smallskip{\vskip\smallskipamount}
+\def\medskip{\vskip\medskipamount}
+\def\bigskip{\vskip\bigskipamount}
+
+% Szaggatott vonal mátrixon belül
+\usepackage{arydshln}
+\makeatletter
+    \renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+      \hskip -\arraycolsep
+      \let\@ifnextchar\new@ifnextchar
+  \array{#1}}
+\makeatother
+
+% Opkut vonalazás
+\pgfdeclaredecoration{complete sines}{initial}
+{
+    \state{initial}[
+        width=+0pt,
+        next state=sine,
+        persistent precomputation={\pgfmathsetmacro\matchinglength{
+            \pgfdecoratedinputsegmentlength / int(\pgfdecoratedinputsegmentlength/\pgfdecorationsegmentlength)}
+            \setlength{\pgfdecorationsegmentlength}{\matchinglength pt}
+        }] {}
+    \state{sine}[width=\pgfdecorationsegmentlength]{
+        \pgfpathsine{\pgfpoint{0.25\pgfdecorationsegmentlength}{0.5\pgfdecorationsegmentamplitude}}
+        \pgfpathcosine{\pgfpoint{0.25\pgfdecorationsegmentlength}{-0.5\pgfdecorationsegmentamplitude}}
+        \pgfpathsine{\pgfpoint{0.25\pgfdecorationsegmentlength}{-0.5\pgfdecorationsegmentamplitude}}
+        \pgfpathcosine{\pgfpoint{0.25\pgfdecorationsegmentlength}{0.5\pgfdecorationsegmentamplitude}}
+}
+    \state{final}{}
+}
+
+ 
+% Tétel környezet -> sajnos akad a wrapfigure-rel -> hack
+\newcounter{def}[section]
+\newcounter{thm}[section]
+
+\renewcommand{\thedef}{\thesection.\arabic{def}}
+\def\claim#1{\par\medskip\noindent\refstepcounter{def}\hbox{\bf \arabic{section}.\arabic{def}. #1}\; }
+\def\endclaim{\par\medskip}
+\newenvironment{definition}{\claim}{\endclaim}
+
+\renewcommand{\thethm}{\thesection.\arabic{thm}}
+\def\claim#1{\par\medskip\noindent\refstepcounter{thm}\hbox{\bf \arabic{section}.\arabic{thm}. #1}\; }
+\def\endclaim{\par\medskip}
+\newenvironment{theorem}{\claim}{\endclaim}

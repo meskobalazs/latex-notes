@@ -1,0 +1,187 @@
+\feladatszam Egy üzemben három terméket gyártanak, melyek megmunkálása két fázisban -- egy esztergán és egy marógépen -- történik. Az első termék esztergagépen történő megmunkálása 1 perc/db, a marógépen pedig 1 perc/db. A második terméké rendre 3 és 2 perc/db, a harmadiké pedig rendre 1 és 2 perc/db. Az esztergagép kapacitása 90 perc, a marógépé pedig 120 perc. A termékek várható eladási egységára rendre 1, 2 és 3 pénzegység, a tervezett árbevétel pedig 110 pénzegység. A gépek állásidejének költsége rendre 2 és 1 pénzegység/perc.
+
+\begin{alphanumericlist}
+\item Adja meg azt a termelési tervet, amelynél a gépek állásidejéből eredő költsége minimális, feltéve, hogy a gépek kapacitását nem lépjük túl és árbevételben pontosan a tervezett mennyiséget biztosítjuk!
+\item Írja fel a feladat duálisát, és adja meg a duál feladat optimális megoldását!
+\item Végezzen érzékenységvizsgálatot az eszterga kapacitásának változására!
+\item Végezzen érzékenységvizsgálatot az marógép kapacitásának változására!
+\item Hány darab kell gyártáni a termékekből, ha a gépek kapacitása rendre 75 és 100 percre változik és az előírt árbevétel 120 pénzegység?
+\end{alphanumericlist}
+
+\begin{megoldas}
+A megadott adatokat táblázatosan rendezve ezt kapjuk:
+\begin{center}
+\begin{tabular}{c|cc|c}
+&$E$&$M$&\\\hline
+$T_1$&$1$&$1$&$1$\\
+$T_2$&$3$&$2$&$2$\\
+$T_3$&$1$&$2$&$3$\\\hline
+&$90$&$120$&$110$\\
+\end{tabular}
+\end{center}
+
+A megadott feltételek matematikailag megfogalmazva az alábbiak:
+\begin{alignat*}{3}
+x_1&+&3x_2&+&x_3&\leq 90\\
+x_1&+&2x_2&+&2x_3&\leq 120\\
+x_1&+&2x_2&+&3x_3&= 110\\
+x_1&,&x_2&,&x_3&\geq 0
+\end{alignat*}
+
+A célfüggvény pedig a következő:
+$$\begin{array}{c}
+2(x_1+3x_2+x_3)+1(x_1+2x_2+2x_3)\longrightarrow\min!\\
+x_1+6x_2+2x_3+x_1+2x_2+2x_3\longrightarrow\min!\\
+3x_1+8x_2+4x_3\longrightarrow\min!
+\end{array}$$
+
+Mivel a lineáris programozási feladat nem sztenderd alakú, ezért egy sztenderd segédfeladatot kell felírnunk, amely a következő:
+\begin{alignat*}{4}
+x_1&+&3x_2&+&x_3&+&u_1&= 90\\
+x_1&+&2x_2&+&2x_3&+&u_2&= 120\\
+x_1&+&2x_2&+&3x_3&+&u_3^*&= 110
+\end{alignat*}
+\vskip -1.4cm
+\begin{align*}
+x_1,x_2,x_3&\geq 0\\
+u_1,u_2,u_3^*&\geq 0\\
+3x_1+8x_2+4x_3&\longrightarrow\min!
+\end{align*}
+
+A feladatot már megoldhatjuk kiinduló szimplex módszerrel, az \textbf{1. fázis}:
+
+\begin{multicols}{2}
+\begin{center}
+\begin{tabular}{c|ccc|c|}
+\multicolumn{1}{c}{}&\multicolumn{1}{c}{$x_1$}&\multicolumn{1}{c}{$x_2$}&
+\multicolumn{1}{c}{$x_3$}&\multicolumn{1}{c}{}\\\cline{2-5}
+$u_1$  &   \circled{$1$}&   $3$&   $1$&  $90$\\
+$u_2$  &   $1$&   $2$&   $2$& $120$\\
+$u_3^*$&   $1$&   $2$&   $3$& $110$\\\cline{2-5}
+       &  $-3$&  $-8$&  $-4$&   $0$\\\cline{2-5}
+       &   $1$&   $2$&   $3$& $110$\\\cline{2-5}
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{c|ccc|c|}
+\multicolumn{1}{c}{}&\multicolumn{1}{c}{$u_1$}&\multicolumn{1}{c}{$x_2$}&
+\multicolumn{1}{c}{$x_3$}&\multicolumn{1}{c}{}\\\cline{2-5}
+$x_1$  &   $1$&   $3$&   $1$&  $90$\\
+$u_2$  &  $-1$&  $-1$&   $1$&  $30$\\
+$u_3^*$&  $-1$&  $-1$&   \circled{$2$}&  $20$\\\cline{2-5}
+       &   $3$&   $1$&  $-1$& $270$\\\cline{2-5}
+       &  $-1$&  $-1$&   $2$&  $20$\\\cline{2-5}
+\end{tabular}
+\end{center}
+\end{multicols}
+\end{megoldas}
+
+\begin{megoldas}
+\begin{center}
+\begin{tabular}{c|ccc|c|}
+\multicolumn{1}{c}{}&\multicolumn{1}{c}{$u_1$}&\multicolumn{1}{c}{$x_2$}&
+\multicolumn{1}{c}{$u_3^*$}&\multicolumn{1}{c}{}\\\cline{2-5}
+$x_1$  &   $\nicefrac{3}{2}$&   $\nicefrac{7}{2}$&   $-\nicefrac{1}{2}$&  $80$\\
+$u_2$  &  $-\nicefrac{1}{2}$&  $-\nicefrac{1}{2}$&   $-\nicefrac{1}{2}$&  $20$\\
+$x_3$  &  $-\nicefrac{1}{2}$&  $-\nicefrac{1}{2}$&   $\nicefrac{1}{2}$&  $10$\\\cline{2-5}
+       &   $\nicefrac{5}{2}$&   $\nicefrac{1}{2}$&  $\nicefrac{1}{2}$& $280$\\\cline{2-5}
+       &  $0$&  $0$&   $-1$&  $0$\\\cline{2-5}
+\end{tabular}
+\end{center}
+
+Az első fázisnak ezennel vége, következhet a \textbf{2. fázis}, az utolsó sort pedig törölhetjük.
+\begin{multicols}{2}
+\begin{center}
+\begin{tabular}{>{$}c<{$}|>{$}c<{$}>{$}c<{$}|>{$}c<{$}|>{$}c<{$}|}
+\multicolumn{1}{c}{}&\multicolumn{1}{c}{$u_1$}&\multicolumn{1}{c}{$x_2$}&
+\multicolumn{1}{c}{}&\multicolumn{1}{c}{$u_3^*$}\\\cline{2-5}
+x_1  &  \nicefrac{3}{2}&  \circled{$\nicefrac{7}{2}$}&  80& -\nicefrac{1}{2}\\
+u_2  & -\nicefrac{1}{2}& -\nicefrac{1}{2}&  20& -\nicefrac{1}{2}\\
+x_3  & -\nicefrac{1}{2}& -\nicefrac{1}{2}&  10& \nicefrac{1}{2} \\\cline{2-5}
+       &  \nicefrac{5}{2}&  \nicefrac{1}{2}& 280& \nicefrac{1}{2} \\\cline{2-5}
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{>{$}c<{$}|>{$}c<{$}>{$}c<{$}|>{$}c<{$}|>{$}c<{$}|}
+\multicolumn{1}{c}{}&\multicolumn{1}{c}{$u_1$}&\multicolumn{1}{c}{$x_1$}&
+\multicolumn{1}{c}{}&\multicolumn{1}{c}{$u_3^*$}\\\cline{2-5}
+x_2  & \circled{$\nicefrac{3}{7}$}&  \nicefrac{2}{7}&  \nicefrac{160}{7}& -\nicefrac{1}{7}\\
+u_2  & -\nicefrac{2}{7}&   \nicefrac{1}{7}&  \nicefrac{220}{7}& -\nicefrac{4}{7} \\
+x_3  & -\nicefrac{2}{7}&   \nicefrac{1}{7}&  \nicefrac{150}{7}& \nicefrac{3}{7}  \\\cline{2-5}
+       & \nicefrac{16}{7}&  -\nicefrac{1}{7}&  \nicefrac{1880}{7}& \nicefrac{4}{7}  \\\cline{2-5}
+\end{tabular}
+\end{center}
+\end{multicols}
+
+\begin{center}
+\begin{tabular}{>{$}c<{$}|>{$}c<{$}>{$}c<{$}|>{$}c<{$}|>{$}c<{$}|}
+\multicolumn{1}{c}{}&\multicolumn{1}{c}{$x_2$}&\multicolumn{1}{c}{$x_1$}&
+\multicolumn{1}{c}{}&\multicolumn{1}{c}{$u_3^*$}\\\cline{2-5}
+u_1  &  \nicefrac{7}{3}&  \nicefrac{2}{3}&  \nicefrac{160}{3}& -\nicefrac{1}{3}\\
+u_2  &  \nicefrac{2}{3}&   \nicefrac{1}{3}&  \nicefrac{140}{3}& -\nicefrac{2}{3} \\
+x_3  &  \nicefrac{2}{3}&   \nicefrac{1}{3}&  \nicefrac{110}{3}& \nicefrac{1}{3}  \\\cline{2-5}
+       &-\nicefrac{16}{3}&  -\nicefrac{5}{3}&  \nicefrac{440}{3}& \nicefrac{4}{3}  \\\cline{2-5}
+\end{tabular}
+\end{center}
+
+A szimplex módszer itt megáll, mivel a vizsgálósor sehol sem pozitív. A módszer által szolgáltatott optimális megoldás a $x=(0,0,110/3)^T$ vektor, és a célfüggvény értéke ekkor $z_o=440/3\approx 146,6667$.
+
+\medskip\hrule\medskip
+
+A duál feladat egyszerűen felírható a feladatból, az optimuma pedig a segédfeladat utolsó szimplex táblájából.
+\begin{alignat*}{3}
+y_1&+&y_2&+&y_3&\leq 3\\
+3y_1&+&2y_2&+&2y_3&\leq 8\\
+y_1&+&2y_2&+&2y_3&\leq 4\\
+&&\mathclap{y_1,y_2\leq0}\\
+&&\mathclap{90y_1+120y_2+110y_3 \longrightarrow\max!}
+\end{alignat*}
+
+Az optimális megoldás az $y=(0,0,-4/3)^T$ vektor, az optimum pedig $z_o=440/3$.
+
+\medskip\hrule\medskip
+
+Az eszterga kapacitása $90 \longrightarrow 90+\lambda$. Mivel $u_1$ bázisban van a jobb oldal így változik:
+\begin{alignat*}{4}
+\tfrac{160}{3}&+&1\lambda&\geq 0 \qquad\longrightarrow\qquad&\lambda&\geq-\tfrac{160}{3}\\
+\tfrac{140}{3}&+&0\lambda&\geq 0&-\tfrac{160}{3}\leq\lambda&\leq+\infty\\
+\tfrac{110}{3}&+&0\lambda&\geq 0\\
+z_o=\tfrac{440}{3}&+&0\lambda
+\end{alignat*}
+\end{megoldas}
+
+\begin{megoldas}
+\medskip\hrule\medskip
+
+A marógép kapacitása $120 \longrightarrow 120+\lambda$. Mivel $u_2$ bázisban van a jobb oldal így változik:
+\begin{alignat*}{4}
+\tfrac{160}{3}&+&0\lambda&\geq 0\\
+\tfrac{140}{3}&+&1\lambda&\geq 0 \qquad\longrightarrow\qquad&\lambda&\geq-\tfrac{140}{3}\\
+\tfrac{110}{3}&+&0\lambda&\geq 0&-\tfrac{160}{3}\leq\lambda&\leq+\infty\\
+z_o=\tfrac{440}{3}&+&0\lambda
+\end{alignat*}
+\hrule\medskip
+\begin{align*}
+b'=\left(\begin{array}{c}75\\100\\120\end{array}\right)&&y=
+\left(\begin{array}{ccc}
+1& 1& -\nicefrac{1}{3}\\[0.3em]
+0& 1& -\nicefrac{2}{3}\\[0.3em]
+0& 0&  \nicefrac{1}{3}\\[0.3em]
+0& 0&  \nicefrac{4}{3}
+\end{array}\right)&&
+y\cdot b'=\left(\begin{array}{c}35\\20\\40\\160\end{array}\right)
+\end{align*}
+\begin{center}
+
+\begin{tabular}{>{$}c<{$}|>{$}c<{$}>{$}c<{$}|>{$}c<{$}|>{$}c<{$}|}
+\multicolumn{1}{c}{}&\multicolumn{1}{c}{$x_2$}&\multicolumn{1}{c}{$x_1$}&
+\multicolumn{1}{c}{}&\multicolumn{1}{c}{$u_3^*$}\\\cline{2-5}
+u_1  &   \nicefrac{7}{3}&  \nicefrac{2}{3}&  35& -\nicefrac{1}{3}\\
+u_2  &   \nicefrac{2}{3}&  \nicefrac{1}{3}&  20& -\nicefrac{2}{3}\\
+x_3  &   \nicefrac{2}{3}&  \nicefrac{1}{3}&  40&  \nicefrac{1}{3}\\\cline{2-5}
+     & -\nicefrac{16}{3}& -\nicefrac{5}{3}& 160&  \nicefrac{4}{3}\\\cline{2-5}
+\end{tabular}
+\end{center}
+\end{megoldas}
